@@ -1,0 +1,38 @@
+name: CI-stable
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-14
+
+    steps:
+      - name: Delete
+        uses: jimschubert/delete-artifacts-action@v1
+        with:
+          log_level: 'debug'
+          min_bytes: '0'
+          
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+                    
+      - name: Get latest tag
+        id: getTag
+        run: |
+          GIT_TAG=$(git tag -l | sort | tail -n1)
+          echo ::set-output name=gitTag::${GIT_TAG}
+
+      - name: Build and bundle smc
+        run: |
+          make
+          tar -cvzf smc.tar.gz smc
+
+      - uses: ncipollo/release-action@v1.9.0
+        with:
+          artifacts: "smc"
+          name: ${{ steps.getTag.outputs.gitTag }}
+          tag: ${{ steps.getTag.outputs.gitTag }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          allowUpdates: true
