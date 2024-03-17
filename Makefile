@@ -1,7 +1,8 @@
 CC = gcc
 CFLAGS = -mmacosx-version-min=10.4  -Wall -g -framework IOKit
 CPPFLAGS = -DCMD_TOOL_BUILD
-DESTDIR = /usr/local/bin
+PREFIX ?= /usr/local
+DESTDIR = $(PREFIX)/bin
 
 all: smc 
 
