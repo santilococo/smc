@@ -8,12 +8,6 @@ jobs:
     runs-on: macos-14
 
     steps:
-      - name: Delete
-        uses: jimschubert/delete-artifacts-action@v1
-        with:
-          log_level: 'debug'
-          min_bytes: '0'
-          
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
